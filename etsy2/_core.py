@@ -329,8 +329,12 @@ class API(object):
         try:
             self.data = self.decode(response.text)
         except json.JSONDecodeError:
-            raise ValueError('Could not decode response from Etsy as JSON: status_code: %r, text: %r, url %r' \
+            raise ValueError('Could not decode response from Etsy as JSON: status_code: %r, text: %r, url %r'\
                 % (response.status_code, response.text, response.url))
 
         self.count = self.data['count']
-        return self.data['results']
+        meta = {
+            "count": self.data['count'],
+            "remaining_calls": response.headers.get('X-RateLimit-Remaining')
+        }
+        return self.data['results'], meta
