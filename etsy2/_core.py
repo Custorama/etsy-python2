@@ -333,8 +333,5 @@ class API(object):
                 % (response.status_code, response.text, response.url))
 
         self.count = self.data['count']
-        meta = {
-            "count": self.data['count'],
-            "remaining_calls": response.headers.get('X-RateLimit-Remaining')
-        }
-        return self.data['results'], meta
+        self.remaining_calls = response.headers.get('X-RateLimit-Remaining')
+        return self.data['results']
